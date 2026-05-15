@@ -49,8 +49,20 @@ Scandals, sectarian disputes, abuse cases, financial irregularities, doctrinal a
 - **Verify**: {fetch | search}
 - **Relevance**: {score}/10
 - **Suggested skill**: `{skill-name}`
-- **Hook direction**: {one-sentence hook in Thai}
-- **Why now**: {one-line rationale}
+
+**สรุปข่าว** (4–6 ประโยคภาษาไทย — เกิดอะไร ใคร ที่ไหน เมื่อไหร่ ตัวเลข/คำพูดสำคัญ — เอาเฉพาะที่ verify ได้จาก snippet/body ห้ามแต่งเติม):
+{substantive summary — what actually happened, who, where, when, key numbers or direct quotes. Cite only what's in the verified source. If snippet is thin, write what's known and explicitly flag what's not yet verified.}
+
+**บริบทที่คนไทยควรรู้** (1–3 ประโยค — อะไรที่ผู้ฟัง เด็กพุทธ อาจไม่คุ้น เช่น คำศัพท์เฉพาะ ตัวบุคคล สำนัก ภูมิหลังการเมือง):
+{1–3 sentences in Thai explaining context that Thai Buddhist audience may not have — e.g., what is a tulku, who is Lama Yeshe, what's the Sikyong, why is this monastery significant}
+
+**มุมเล่าที่เป็นไปได้** (2–3 angle ideas — choose by what fits brand tone: warm, story-driven, non-preachy):
+- {Angle 1 — e.g., human-interest hook}
+- {Angle 2 — e.g., contrast / surprise / "ไม่เคยรู้เลย" element}
+- {Angle 3 — e.g., dharma connection / lesson for everyday life}
+
+**Hook direction**: {one-sentence punchy opener in Thai for the content piece}
+**Why now**: {one-line rationale — why this beats the runners-up}
 
 (repeat for each primary pick)
 
