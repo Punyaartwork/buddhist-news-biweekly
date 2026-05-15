@@ -8,7 +8,7 @@ This skill mirrors the structure of `daily-ai-news` but is tuned for the Buddhis
 
 ## Hard Constraints (do not override)
 
-- **No Bash, no shell, no git CLI.** All file writes to the repo go through the GitHub MCP connector.
+- **No Bash, no shell, no git CLI.** All file writes to the repo go through the GitHub MCP connector. Look for tools whose names match `mcp__github__*` / `mcp__Github__*` / similar — e.g. `create_or_update_file`, `push_files`, `get_file_contents`. The skill MUST find at least one of these to proceed.
 - **Verification tiers**:
   - Tier 1 — `WebFetch` returns 2xx AND article timestamp is within `window_hours` (default 48h). Preferred.
   - Tier 2 — `WebSearch` snippet from a domain listed in `reference/trusted-sources.md`. Allowed only when WebFetch is blocked. Never cite a URL that is not in the search results for a trusted domain.
@@ -29,7 +29,17 @@ This skill mirrors the structure of `daily-ai-news` but is tuned for the Buddhis
 
 ---
 
-## 7 Steps (execute in order)
+## Steps (execute in order)
+
+### Step 0 — Preflight (fail fast, log loudly)
+
+1. **GitHub connector check.** Confirm GitHub MCP is connected by looking for tools whose names match `mcp__github__*` / `mcp__Github__*` / similar — e.g. `create_or_update_file`, `push_files`, `get_file_contents`. If **none** are available:
+   - Print: `ABORT: GitHub connector is not connected. Enable the GitHub Integration in Claude settings (https://claude.ai/customize/connectors) and re-run.`
+   - **Stop immediately.** Do not research, do not write any files.
+2. **Print which tools were found** so debugging is obvious, e.g.:
+   ```
+   GitHub MCP detected — tools: create_or_update_file, get_file_contents, push_files
+   ```
 
 ### Step 1 — Load configuration
 
@@ -133,7 +143,7 @@ If NO-OP: keep the same fields but show the existing file's short SHA and permal
 
 | Condition | Action |
 |---|---|
-| GitHub MCP missing or unauthenticated | Abort. Tell the user to `/mcp` authenticate `plugin:engineering:github`. |
+| GitHub MCP missing or unauthenticated | Abort at Step 0. Tell the user to enable the GitHub Integration at https://claude.ai/customize/connectors. |
 | `reference/defaults.json` missing or invalid JSON | Abort with file path. |
 | All sources unreachable AND WebSearch returns nothing for trusted domains | Abort with "no verifiable candidates". |
 | `fallback_no_news: false` and zero passes filter | Abort with "no qualifying news today". |
