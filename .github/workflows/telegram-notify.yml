@@ -1,0 +1,60 @@
+name: Telegram notify (Buddhist Brief)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'briefs/**'
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Identify newly-pushed brief
+        id: brief
+        run: |
+          file=$(git diff --name-only HEAD^ HEAD -- 'briefs/**.md' | tail -n 1)
+          if [ -z "$file" ]; then
+            echo "No brief file changed; nothing to notify."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "file=$file" >> "$GITHUB_OUTPUT"
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+
+      - name: Build Telegram message
+        if: steps.brief.outputs.skip == 'false'
+        id: msg
+        env:
+          FILE: ${{ steps.brief.outputs.file }}
+        run: |
+          permalink="https://github.com/${{ github.repository }}/blob/${{ github.sha }}/${FILE}"
+          body=$(awk 'NR>1' "$FILE" | head -c 3500)
+          {
+            echo "text<<EOF"
+            echo "🪷 Buddhist Brief — $(basename "$FILE" .md)"
+            echo ""
+            echo "$body"
+            echo ""
+            echo "↗ Full brief: $permalink"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Send to Telegram
+        if: steps.brief.outputs.skip == 'false'
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TEXT: ${{ steps.msg.outputs.text }}
+        run: |
+          curl -sS -X POST \
+            "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "text=${TEXT}" \
+            --data-urlencode "disable_web_page_preview=false" \
+            --data-urlencode "parse_mode=Markdown"

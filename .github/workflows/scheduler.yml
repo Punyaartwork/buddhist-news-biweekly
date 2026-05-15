@@ -1,0 +1,31 @@
+name: Scheduler — buddhist news biweekly
+
+# Runs the buddhist-news-biweekly skill every other day at 06:00 Asia/Bangkok.
+# Bangkok is UTC+7 → 06:00 BKK == 23:00 UTC the previous day.
+# Cron `0 23 */2 * *` fires every 2nd day at 23:00 UTC.
+
+on:
+  schedule:
+    - cron: '0 23 */2 * *'
+  workflow_dispatch:
+
+jobs:
+  run-skill:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Placeholder — wire up your skill runner here
+        run: |
+          echo "This step is a placeholder."
+          echo "Mirror whatever runner the dailyainews repo uses to invoke its"
+          echo "daily-ai-news skill (likely a Claude CLI / GitHub App / external"
+          echo "service that reads .claude/skills/buddhist-news-biweekly/SKILL.md"
+          echo "and executes the 7 steps)."
+          echo ""
+          echo "The runner must commit through the GitHub MCP connector or the"
+          echo "GitHub API — not via git CLI from this runner — to match the"
+          echo "skill's hard constraints."

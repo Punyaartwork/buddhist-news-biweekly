@@ -1,0 +1,14 @@
+{
+  "owner": "Punyaartwork",
+  "repo": "buddhist-news-biweekly",
+  "branch": "main",
+  "output_path": "briefs/{year}/{month}/{date}.md",
+  "timezone": "Asia/Bangkok",
+  "schedule": "0 6 1-31/2 * *",
+  "window_hours": 48,
+  "min_relevance_score": 7,
+  "max_primary_picks": 5,
+  "include_controversies": false,
+  "fallback_no_news": true,
+  "telegram_prefix": "🪷 Buddhist Brief"
+}
